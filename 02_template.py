@@ -1,16 +1,26 @@
-import os
-from langchain import HuggingFaceHub
+from llms import *
 from langchain import PromptTemplate
 
-os.environ["HUGGINGFACEHUB_API_TOKEN"] = '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'
-
-repo_id = "bigscience/bloom"
-llm = HuggingFaceHub(repo_id=repo_id, model_kwargs={"temperature":0.1, "max_length":256})
-
-template = "Who won the FIFA World Cup in the year {year}? Give me one country name."
+# Define the template
+user_text = """
+唉,老铁,我瞅你咋地？
+你这瓜不对吧？卖这么贵给谁吃呢？
+我看你就是黑吃黑,打一架？
+"""
+user_style = """
+英语,生气的口气
+"""
+template = """
+Translate the text
+that is delimited by triple backticks 
+into a style that is {style}.
+text: ```{text}```
+"""
 prompt = PromptTemplate(
-    input_variables=["year"],
-    template=template,
+    input_variables=["style", "text"],
+    template=template
 )
-
-print(llm(prompt.format(year=2018)))
+print('-'*50)
+print(prompt.format(style=user_style, text=user_text))
+print('-'*50)
+print(llm(prompt.format(style=user_style, text=user_text)))
